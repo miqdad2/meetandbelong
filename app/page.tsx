@@ -70,7 +70,7 @@ export default function Home() {
           <h1>MEET NEW PEOPLE.<br /><em>BUILD REAL</em><br />FRIENDSHIPS.</h1>
           <p className="hero-intro">Small, thoughtfully matched gatherings that make meeting new people feel natural—not like networking and definitely not like dating.</p>
           <p className="hero-offer"><strong>Free to apply</strong><span />Pilot gatherings expected KD 5–8</p>
-          <div className="hero-actions"><a className="button" href="#join">Join the waitlist <span>↗</span></a><a className="whatsapp-link" href="https://wa.me/96541103254?text=Hello%20Meet%20%26%20Belong%2C%20I%20would%20like%20to%20learn%20more." target="_blank" rel="noreferrer">Chat on WhatsApp ↗</a></div>
+          <div className="hero-actions"><a className="button" href="#join">Join the waitlist <span>↗</span></a></div>
           <div className="trust-row"><span>✓ Small hosted groups</span><span>✓ Public venues</span><span>✓ Friendship only</span></div>
         </div>
 
@@ -142,7 +142,7 @@ export default function Home() {
         </form>
       </section>
 
-      <footer><div className="footer-brand"><a className="wordmark wordmark-light" href="#top"><img className="brand-mark" src="/brand-mark-light.svg" alt="" />Meet <b>&amp;</b> Belong</a><p>Organized by the Meet &amp; Belong team in Kuwait.</p></div><div className="footer-links"><a href="#how">How it works</a><a href="#circles">Sample circles</a><a href="/code-of-conduct">Code of conduct</a><a href="/privacy">Privacy</a><a href="/cancellation">Cancellation</a></div><div className="footer-contact"><p>Friday &amp; Saturday circles · Kuwait</p><a href="https://wa.me/96541103254" target="_blank" rel="noreferrer">+965 4110 3254 ↗</a></div><small>© 2026 Meet &amp; Belong. Friendship, thoughtfully arranged.</small></footer>
+      <footer><div className="footer-brand"><a className="wordmark wordmark-light" href="#top"><img className="brand-mark" src="/brand-mark-light.svg" alt="" />Meet <b>&amp;</b> Belong</a><p>Organized by the Meet &amp; Belong team in Kuwait.</p></div><div className="footer-links"><a href="#how">How it works</a><a href="#circles">Sample circles</a><a href="/code-of-conduct">Code of conduct</a><a href="/privacy">Privacy</a><a href="/cancellation">Cancellation</a></div><div className="footer-contact"><p>Friday &amp; Saturday circles · Kuwait</p></div><small>© 2026 Meet &amp; Belong. Friendship, thoughtfully arranged.</small></footer>
     </main>
   );
 }
