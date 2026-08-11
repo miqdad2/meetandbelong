@@ -55,9 +55,34 @@ const stepLabels = ["About you", "Your circle", "Confirm"];
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^\+?[0-9()\s-]{7,20}$/;
 
+// The applicant's own WhatsApp message to Meet & Belong's number — they review
+// and send it themselves, so nothing here confirms delivery on our side.
+const whatsappNumber = "96541103254";
+
 function describedBy(...ids: (string | false | undefined)[]): string | undefined {
   const list = ids.filter(Boolean) as string[];
   return list.length ? list.join(" ") : undefined;
+}
+
+function buildWhatsappMessage(values: FormValues): string {
+  return [
+    "Hello Meet & Belong, I’d like to apply for a circle.", "",
+    `First name: ${values.firstName}`,
+    `Mobile: ${values.mobile}`,
+    values.email && `Email: ${values.email}`,
+    `Age range: ${values.ageRange}`,
+    `Gender: ${values.gender}`,
+    `Nationality: ${values.nationality}`,
+    `Area: ${values.area}`,
+    `Time in Kuwait: ${values.kuwaitDuration}`,
+    `Preferred language: ${values.language}`,
+    `Circle preference: ${values.circleInterest}`,
+    `Available: ${values.availability.join(", ")}`,
+    `Group preference: ${values.groupPreference}`,
+    `Hoping to find: ${values.interestGoal}`,
+    values.matchNotes && `Notes: ${values.matchNotes}`,
+    `Comfortable paying KD 8–10: ${values.paymentReadiness}`,
+  ].filter(Boolean).join("\n");
 }
 
 type Props = { circleOptions: string[] };
@@ -66,7 +91,7 @@ export default function ApplicationForm({ circleOptions }: Props) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success">("idle");
   const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const setField = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
@@ -146,9 +171,8 @@ export default function ApplicationForm({ circleOptions }: Props) {
     setStep((s) => Math.max(s - 1, 0));
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (status === "submitting") return;
     const stepErrors = validateStep(2);
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors);
@@ -156,18 +180,9 @@ export default function ApplicationForm({ circleOptions }: Props) {
       return;
     }
     setErrors({});
-    setStatus("submitting");
-    try {
-      const response = await fetch("/api/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) throw new Error("submission_failed");
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+    const message = buildWhatsappMessage(values);
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    setStatus("success");
   };
 
   const groupOptions =
@@ -179,9 +194,9 @@ export default function ApplicationForm({ circleOptions }: Props) {
 
   if (status === "success") {
     return (
-      <div className="form-status form-status-success" role="status" aria-live="polite">
-        <h3>Application received.</h3>
-        <p>Thank you. We’ll review your preferences and contact you when a suitable circle is available.</p>
+      <div className="form-status-success" role="status" aria-live="polite">
+        <h3>Almost done — review and send.</h3>
+        <p>We opened WhatsApp with your answers filled in. Review the message and hit send to complete your application.</p>
       </div>
     );
   }
@@ -195,16 +210,6 @@ export default function ApplicationForm({ circleOptions }: Props) {
           </li>
         ))}
       </ol>
-
-      <div role="status" aria-live="polite" className="sr-only">
-        {status === "submitting" ? "Submitting your application." : ""}
-      </div>
-
-      {status === "error" && (
-        <p className="form-status form-status-error" role="alert">
-          We couldn’t submit your application. Your information has not been lost. Please try again.
-        </p>
-      )}
 
       {step === 0 && (
         <div className="form-step">
@@ -378,9 +383,7 @@ export default function ApplicationForm({ circleOptions }: Props) {
         {step < stepLabels.length - 1 ? (
           <button type="button" className="button" onClick={handleContinue}>Continue</button>
         ) : (
-          <button className="button" type="submit" disabled={status === "submitting"}>
-            {status === "submitting" ? "Submitting…" : <>Submit application <span>↗</span></>}
-          </button>
+          <button className="button" type="submit">Submit application <span>↗</span></button>
         )}
       </div>
     </form>
